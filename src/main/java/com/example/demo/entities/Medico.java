@@ -2,18 +2,37 @@ package com.example.demo.entities;
 
 import java.util.List;
 
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "medicos")
 public class Medico {
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long medicoId;
+
 	private String nombre;
 	private String apellido;
 	private String email;
 	private String telefono;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "clinica_id", nullable = false)
 	private Clinica clinicaDondeTrabaja;
+
+	@Enumerated(EnumType.STRING)
 	private DiaSemanaEnum diaSemanaDisponible;
+
 	private boolean trabajaFinesSemanasYFeriados;
+
+
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(
+			name = "medico_paciente",
+			joinColumns = @JoinColumn(name = "medico_id"),
+			inverseJoinColumns = @JoinColumn(name = "paciente_id"))
+	private List<Paciente> pacientes;
 	
 	public long getMedicoId() {
 		return medicoId;
@@ -21,9 +40,6 @@ public class Medico {
 	public void setMedicoId(long medicoId) {
 		this.medicoId = medicoId;
 	}
-	@OneToMany
-	private List<Paciente> pacientes;
-	
 	public String getNombre() {
 		return nombre;
 	}

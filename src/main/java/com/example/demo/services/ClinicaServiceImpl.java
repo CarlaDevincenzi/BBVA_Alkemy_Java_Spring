@@ -29,29 +29,30 @@ public class ClinicaServiceImpl implements ClinicaService {
 	 * @param nuevoPaciente
 	 * @return
 	 */
+
 	public Paciente guardarPaciente(Paciente nuevoPaciente) {
-		Paciente pacienteGuardado = pacienteRepository.save(nuevoPaciente);
-		return pacienteGuardado;
+		return pacienteRepository.save(nuevoPaciente);
+
 	}
 
 	/**
 	 * Usado para crear un nuevo medico en la tabla de medicos
-	 * @param nuevoPaciente
+	 * @param nuevoMedico
 	 * @return
 	 */
 	public Medico guardarMedico(Medico nuevoMedico) {
-		Medico medicoGuardado = medicoRepository.save(nuevoMedico);
-		return medicoGuardado;
+		return medicoRepository.save(nuevoMedico);
+
 	}
 
 	/**
 	 * Usado para crear una nueva clinica en la tabla de clinicas
-	 * @param nuevoPaciente
+	 * @param nuevaClinica
 	 * @return
 	 */
 	public Clinica guardarClinica(Clinica nuevaClinica) {
-		Clinica clinicaGuardada = clinicaRepository.save(nuevaClinica);
-		return clinicaGuardada;
+		return clinicaRepository.save(nuevaClinica);
+
 	}
 
 	/**

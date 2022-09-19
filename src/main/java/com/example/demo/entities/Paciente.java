@@ -1,9 +1,14 @@
 package com.example.demo.entities;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+@Entity
+@Table(name = "pacientes")
 public class Paciente {
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long pacienteId;
 	private String nombre;
 	private String apellido;
@@ -13,6 +18,10 @@ public class Paciente {
 	private String dni;
 	private String telefono;
 	private Date fechaTurnoConMedico;
+
+	@ManyToMany(mappedBy = "pacientes")
+
+	private List<Medico> medicos;
 	
 	public long getPacienteId() {
 		return pacienteId;
@@ -68,6 +77,12 @@ public class Paciente {
 	public void setFechaTurnoConMedico(Date fechaTurnoConMedico) {
 		this.fechaTurnoConMedico = fechaTurnoConMedico;
 	}
-	
 
+	public List<Medico> getMedicos() {
+		return medicos;
+	}
+
+	public void setMedicos(List<Medico> medicos) {
+		this.medicos = medicos;
+	}
 }
