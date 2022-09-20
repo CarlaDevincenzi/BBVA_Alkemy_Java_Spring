@@ -36,7 +36,8 @@ public class ClinicaController {
 	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = Paciente.class, tags = "Agregar paciente")
 	@PostMapping("/add/paciente")
     public Paciente cargarPaciente(@RequestBody Paciente paciente) {
-        return null;
+
+		return service.guardarPaciente(paciente);
     }
 	
 	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = Paciente.class, tags = "Agregar medico")
@@ -49,7 +50,8 @@ public class ClinicaController {
 	@ApiOperation(value = "Endpoint para poder agregar una clinica a la lista de clinicas", response = Paciente.class, tags = "Agregar clinica")
 	@PostMapping("/add/clinica")
     public Clinica cargarClinica(@RequestBody Clinica clinica) {
-        return service.guardarClinica(clinica);
+
+		return service.guardarClinica(clinica);
     }
 
 	@ApiOperation(value = "Endpoint para poder una lista de pacientes filtrando por medico y por fecha de turno con el medico", response = Paciente.class, tags = "Pacientes por medico y fecha")

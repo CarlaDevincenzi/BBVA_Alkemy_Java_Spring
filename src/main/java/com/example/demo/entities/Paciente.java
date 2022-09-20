@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
@@ -14,11 +16,13 @@ public class Paciente {
 	private String apellido;
 	private String email;
 	private int edad;
+	@Temporal(TemporalType.DATE)
 	private Date fechaNacimiento;
 	private String dni;
 	private String telefono;
+	@Temporal(TemporalType.DATE)
 	private Date fechaTurnoConMedico;
-
+	@JsonIgnore
 	@ManyToMany(mappedBy = "pacientes")
 
 	private List<Medico> medicos;
