@@ -4,6 +4,7 @@ import com.example.demo.entities.Clinica;
 import com.example.demo.entities.Medico;
 import com.example.demo.entities.Paciente;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ClinicaService {
@@ -13,4 +14,5 @@ public interface ClinicaService {
     List<Paciente> obtenerPacientes();
     List<Medico> obtenerMedicos();
     List<Clinica> obtenerClinicas();
+    List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha);
 }

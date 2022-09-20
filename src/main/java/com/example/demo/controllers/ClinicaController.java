@@ -1,16 +1,14 @@
 package com.example.demo.controllers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.entities.Clinica;
 import com.example.demo.entities.DiaSemanaEnum;
@@ -26,6 +24,12 @@ public class ClinicaController {
 	
 	@Autowired
 	private ClinicaService service;
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+	}
 	
 	@ApiOperation(value = "Endpoint de prueba para saber que funciona las API", response = String.class, tags = "Endpoint prueba API")
 	@GetMapping("/hello")
@@ -56,8 +60,8 @@ public class ClinicaController {
 
 	@ApiOperation(value = "Endpoint para poder una lista de pacientes filtrando por medico y por fecha de turno con el medico", response = Paciente.class, tags = "Pacientes por medico y fecha")
 	@GetMapping("/get/pacientesPorMedicoYFecha/{medicoId}/{fecha}")
-	public List<Paciente> pacientesPorMedicoYFecha(@PathVariable("medicoId") int medicoId, @PathVariable("fecha") Date fecha) {
-		return new ArrayList<Paciente>();
+	public List<Paciente> pacientesPorMedicoYFecha(@PathVariable("medicoId") Long medicoId, @PathVariable("fecha") Date fecha) {
+		return service.obtenerPacienteFechaDelMedico(medicoId, fecha);
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes que tuvo un medico", response = Paciente.class, tags = "Historial de pacientes de un medico")

@@ -26,12 +26,12 @@ public class Medico {
 
 	private boolean trabajaFinesSemanasYFeriados;
 
-
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
 			name = "medico_paciente",
 			joinColumns = @JoinColumn(name = "medico_id"),
 			inverseJoinColumns = @JoinColumn(name = "paciente_id"))
+
 	private List<Paciente> pacientes;
 	
 	public long getMedicoId() {

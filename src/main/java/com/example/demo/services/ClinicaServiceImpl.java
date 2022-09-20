@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,26 @@ public class ClinicaServiceImpl implements ClinicaService {
 	 */
 	public List<Clinica> obtenerClinicas() {
 		return clinicaRepository.findAll();
+	}
+
+	@Override
+	public List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha) {
+		List<Medico> medicos = medicoRepository.findAll();
+		Medico med = null;
+		for (Medico medico : medicos){
+			if(medico.getMedicoId() == id){
+				med = medico;
+				break;
+			}
+		}
+		List<Paciente> pacientesFecha = new ArrayList<>();
+		for (Paciente pacte : med.getPacientes()){
+			if(pacte.getFechaTurnoConMedico().equals(fecha)){
+				pacientesFecha.add(pacte);
+			}
+		}
+
+		return pacientesFecha;
 	}
 
 }
