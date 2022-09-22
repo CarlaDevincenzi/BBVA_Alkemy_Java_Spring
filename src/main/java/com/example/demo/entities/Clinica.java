@@ -16,7 +16,7 @@ public class Clinica {
 	private String direccion;
 	private String telefono;
 	@JsonIgnore
-	@OneToMany(mappedBy = "clinicaDondeTrabaja")
+	@OneToMany(mappedBy = "clinicaDondeTrabaja", orphanRemoval = true)
 	private List<Medico> medicos;
 	
 	public long getClinicaId() {

@@ -170,11 +170,19 @@ public class ClinicaController {
 		}
 	}
 
+
+  @ApiOperation(value = "Endpoint para eliminar una clinica", response = Paciente.class, tags = "Eliminar clinica")
+	@DeleteMapping("/delete/clinica/{clinicaId}")
+	public void eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
+		service.eliminarClinica(clinicaId);
+  }
+  
 	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
 	@GetMapping("/get/promedioPacientesAtendidosPorMedico")
 	public double promedioPacientesAtendidosPorMedico() {
 
 		return service.promedioPacientesAtendidosPorMedico();
+
 	}
 
 }

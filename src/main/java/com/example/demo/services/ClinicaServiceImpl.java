@@ -203,6 +203,11 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	}
 
+
+	public void eliminarClinica (Long idClinica) {
+		clinicaRepository.deleteById(idClinica);
+	}
+
 	@Override
 	public double promedioPacientesAtendidosPorMedico() {
 		double cantidadPacientesAtendidos = pacienteRepository.findAll().size();
@@ -210,6 +215,7 @@ public class ClinicaServiceImpl implements ClinicaService {
 		int cantMedicos = medicoRepository.findAll().size();
 
 		promedioPacientes = cantidadPacientesAtendidos / cantMedicos;
+
 
 		return promedioPacientes;
 	}
