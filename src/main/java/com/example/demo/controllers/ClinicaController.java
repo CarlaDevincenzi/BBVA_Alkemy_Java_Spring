@@ -151,17 +151,19 @@ public class ClinicaController {
 		return response;
 	}
 
-
+	@ApiOperation(value = "Endpoint para poder obtener todos los pacientes", response = Paciente.class, tags = "Todos los pacientes")
 	@GetMapping("/get/pacientes")
 	public ResponseEntity<List<Paciente>> obtenerPacientes () {
 		return ResponseEntity.ok().body(service.obtenerPacientes());
 	}
 
+	@ApiOperation(value = "Endpoint para poder obtener todos los médicos", response = Medico.class, tags = "Todos los médicos")
 	@GetMapping("/get/medicos")
 	public ResponseEntity<List<Medico>> obtenerMedicos () {
 		return ResponseEntity.ok().body(service.obtenerMedicos());
 	}
 
+	@ApiOperation(value = "Endpoint para poder obtener todas los clínicas", response = Clinica.class, tags = "Todas los clínicas")
 	@GetMapping("/get/clinicas")
 	public ResponseEntity<List<Clinica>> obtenerClinicas () {
 		return ResponseEntity.ok().body(service.obtenerClinicas());
