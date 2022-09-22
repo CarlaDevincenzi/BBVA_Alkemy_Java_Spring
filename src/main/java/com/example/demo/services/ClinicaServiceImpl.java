@@ -3,7 +3,11 @@ package com.example.demo.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import com.example.demo.entities.DiaSemanaEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +87,7 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	@Override
 	public List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha) {
-		List<Medico> medicos = medicoRepository.findAll();
+		List<Medico> medicos = obtenerMedicos();
 		Medico med = null;
 		for (Medico medico : medicos){
 			if(medico.getMedicoId() == id){
@@ -101,9 +105,46 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return pacientesFecha;
 	}
 
+	@Override
+	public List<Medico> obtenerMedicosQueTrabajanDiaSemana(DiaSemanaEnum diaSemana) {
+		List<Medico> medicosDia = obtenerMedicos().stream()
+				.filter(medico -> medico.getDiaSemanaDisponible().equals(diaSemana))
+				.collect(Collectors.toList());
+
+		return medicosDia;
+	}
+
+	public Clinica getClinicaById(long clinicaId){
+		Optional<Clinica> clinica = obtenerClinicas().stream()
+				.filter(clinica1 -> clinica1.getClinicaId() == clinicaId)
+				.findFirst();
+
+		return clinica.isPresent() ? clinica.get() : null;
+	}
+
+	@Override
+	public int obtenerCantidadPacientesClinicaFecha(long clinicaId, Date fecha) {
+		int cantPacientes = 0;
+		Clinica clinica = getClinicaById(clinicaId);
+
+		if (clinica != null) {
+			List<Medico> medicosClinica = clinica.getMedicos();
+
+			for (Medico med : medicosClinica) {
+				for (Paciente paciente : med.getPacientes()) {
+					if (paciente.getFechaTurnoConMedico().equals(fecha)) {
+						cantPacientes++;
+					}
+				}
+			}
+		}
+		return cantPacientes;
+	}
+
 	public List<Paciente> obtenerPacientesMedico (Long idMedico) {
 		Medico medico = medicoRepository.findById(idMedico).get();
 		return medico.getPacientes();
+
 	}
 
 	public List<Medico> obtenerMedicosPaciente (Long idPaciente) {

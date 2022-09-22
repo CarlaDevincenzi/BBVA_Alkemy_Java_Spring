@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
+import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -79,14 +82,17 @@ public class ClinicaController {
 	
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan en un dia de la semana", response = Paciente.class, tags = "Medicos que trabajan un dia especifico de la semana")
 	@GetMapping("/get/medicosQueTrabajanDia/{diaSemana}")
-	public List<Medico> medicosQueTrabajanDia(@PathVariable("diaSemana") DiaSemanaEnum diaSemana) {
-		return new ArrayList<Medico>();
+	public ResponseEntity<List<Medico>> medicosQueTrabajanDia(@PathVariable("diaSemana") DiaSemanaEnum diaSemana) {
+
+		List<Medico> medicosDia = service.obtenerMedicosQueTrabajanDiaSemana(diaSemana);
+		return ResponseEntity.status(HttpStatus.OK).body(medicosDia);
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener la cantidad de pacientes que tiene una clinica para una fecha en particular", response = Paciente.class, tags = "Cantidad de pacientes de una clinica por fecha")
-	@GetMapping("/get/cantidadPacientesClinicaFecha/{fecha}")
-	public int cantidadPacientesClinicaFecha(@PathVariable("fecha") Date fecha) {
-		return 0;
+	@GetMapping("/get/cantidadPacientesClinicaFecha/{clinicaId}/{fecha}")
+	public int cantidadPacientesClinicaFecha(@PathVariable("clinicaId") long clinicaId, @PathVariable("fecha") Date fecha) {
+
+		return service.obtenerCantidadPacientesClinicaFecha(clinicaId, fecha);
 	}
 
 	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
