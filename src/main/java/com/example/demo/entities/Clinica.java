@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +15,8 @@ public class Clinica {
 	private String nombre;
 	private String direccion;
 	private String telefono;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "clinicaDondeTrabaja")
+	@JsonIgnore
+	@OneToMany(mappedBy = "clinicaDondeTrabaja")
 	private List<Medico> medicos;
 	
 	public long getClinicaId() {

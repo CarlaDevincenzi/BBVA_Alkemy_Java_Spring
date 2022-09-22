@@ -85,7 +85,6 @@ public class ClinicaController {
 	public ResponseEntity<List<Medico>> medicosQueTrabajanDia(@PathVariable("diaSemana") DiaSemanaEnum diaSemana) {
 
 		List<Medico> medicosDia = service.obtenerMedicosQueTrabajanDiaSemana(diaSemana);
-		// ver de agregar Exception
 		return ResponseEntity.status(HttpStatus.OK).body(medicosDia);
 	}
 	
