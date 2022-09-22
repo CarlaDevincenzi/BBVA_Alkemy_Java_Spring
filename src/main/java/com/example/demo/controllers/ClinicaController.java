@@ -130,5 +130,20 @@ public class ClinicaController {
 	public List<Medico> medicosQueTrabajanDiasNoLaborables(@PathVariable("clinicaId") int clinicaId) {
 		return new ArrayList<Medico>();
 	}
+
+	@GetMapping("/get/pacientes")
+	public ResponseEntity<List<Paciente>> obtenerPacientes () {
+		return ResponseEntity.ok().body(service.obtenerPacientes());
+	}
+
+	@GetMapping("/get/medicos")
+	public ResponseEntity<List<Medico>> obtenerMedicos () {
+		return ResponseEntity.ok().body(service.obtenerMedicos());
+	}
+
+	@GetMapping("/get/clinicas")
+	public ResponseEntity<List<Clinica>> obtenerClinicas () {
+		return ResponseEntity.ok().body(service.obtenerClinicas());
+	}
 	
 }
