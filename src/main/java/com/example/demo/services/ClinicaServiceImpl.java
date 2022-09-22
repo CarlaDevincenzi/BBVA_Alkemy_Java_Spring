@@ -106,4 +106,9 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return medico.getPacientes();
 	}
 
+	public List<Medico> obtenerMedicosPaciente (Long idPaciente) {
+		Paciente paciente = pacienteRepository.findById(idPaciente).get();
+		return paciente.getMedicos();
+	}
+
 }
