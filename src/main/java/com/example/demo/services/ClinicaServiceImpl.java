@@ -18,6 +18,8 @@ import com.example.demo.repositories.ClinicaRepository;
 import com.example.demo.repositories.MedicoRepository;
 import com.example.demo.repositories.PacienteRepository;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 public class ClinicaServiceImpl implements ClinicaService {
 	
@@ -205,7 +207,12 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 
 	public void eliminarClinica (Long idClinica) {
-		clinicaRepository.deleteById(idClinica);
+		if (clinicaRepository.existsById(idClinica)) {
+			clinicaRepository.deleteById(idClinica);
+		}
+		else {
+			throw new EntityNotFoundException();
+		}
 	}
 
 	@Override
