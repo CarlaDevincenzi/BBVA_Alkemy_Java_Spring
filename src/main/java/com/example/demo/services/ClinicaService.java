@@ -26,7 +26,7 @@ public interface ClinicaService {
     List<Medico> medicosQueTrabajanDiasNoLaborablesClinica(Long clinicaId);
     Clinica getCLinicaById(Long clinicaId);
     Paciente updatePaciente(Paciente paciente, Long pacienteId);
-
+    void eliminarClinica (Long idClinica);
 
 
 

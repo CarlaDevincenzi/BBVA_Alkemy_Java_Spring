@@ -203,7 +203,9 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	}
 
-
+	public void eliminarClinica (Long idClinica) {
+		clinicaRepository.deleteById(idClinica);
+	}
 
 
 

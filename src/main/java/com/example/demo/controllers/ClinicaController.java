@@ -183,6 +183,9 @@ public class ClinicaController {
 		}
 	}
 
-
+	@DeleteMapping("/delete/clinica/{clinicaId}")
+	public void eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
+		service.eliminarClinica(clinicaId);
+	}
 
 }
