@@ -95,12 +95,6 @@ public class ClinicaController {
 		return service.obtenerCantidadPacientesClinicaFecha(clinicaId, fecha);
 	}
 
-	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
-	@GetMapping("/get/promedioPacientesAtendidosPorMedico/{medicoId}")
-	public double promedioPacientesAtendidosPorMedico(@PathVariable("medicoId") int medicoId) {
-		return 0;
-	}
-
 	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes en un rango de fechas", response = Paciente.class, tags = "Pacientes por rango de fechas")
 	@GetMapping("/get/pacientesEntreFechas/desde/{fechaDesde}/hasta/{fechaHasta}")
 	public List<Paciente> pacientesEntreFechas(@PathVariable("fechaDesde") Date fechaDesde, @PathVariable("fechaHasta") Date fechaHasta) {
