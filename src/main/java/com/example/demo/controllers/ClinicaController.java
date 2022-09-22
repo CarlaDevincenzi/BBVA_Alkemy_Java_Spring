@@ -76,8 +76,8 @@ public class ClinicaController {
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista de medicos con los que se atendio un paciente", response = Paciente.class, tags = "Historial de medicos de un paciente")
 	@GetMapping("/get/historialAtencionesPaciente/{pacienteId}")
-	public List<Medico> historialAtencionesPaciente(@PathVariable("pacienteId") int pacienteId) {
-		return new ArrayList<Medico>();
+	public ResponseEntity<List<Medico>> historialAtencionesPaciente(@PathVariable("pacienteId") Long pacienteId) {
+		return ResponseEntity.ok().body(service.obtenerMedicosPaciente(pacienteId));
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan en un dia de la semana", response = Paciente.class, tags = "Medicos que trabajan un dia especifico de la semana")

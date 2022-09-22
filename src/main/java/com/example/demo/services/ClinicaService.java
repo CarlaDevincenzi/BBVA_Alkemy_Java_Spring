@@ -20,5 +20,6 @@ public interface ClinicaService {
     List<Medico> obtenerMedicosQueTrabajanDiaSemana(DiaSemanaEnum diaSemana);
     int obtenerCantidadPacientesClinicaFecha(long clinicaId, Date fecha);
     List<Paciente> obtenerPacientesMedico (Long idMedico);
+    List<Medico> obtenerMedicosPaciente (Long idPaciente);
 
 }
