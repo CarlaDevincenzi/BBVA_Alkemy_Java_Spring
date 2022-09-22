@@ -42,6 +42,10 @@ public class Clinica {
 		this.telefono = telefono;
 	}
 
+	public List<Medico> getMedicos() {
+		return medicos;
+	}
+
 	public void setMedicos(List<Medico> medicos) {
 		this.medicos = medicos;
 	}
