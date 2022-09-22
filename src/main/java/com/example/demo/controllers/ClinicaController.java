@@ -118,18 +118,39 @@ public class ClinicaController {
 	public List<Paciente> pacientesEntreFechas(@PathVariable("fechaDesde") Date fechaDesde, @PathVariable("fechaHasta") Date fechaHasta) {
 		return new ArrayList<Paciente>();
 	}
-	
+
+
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan los fines de semana y o feriados", response = Paciente.class, tags = "Medicos que trabajan dias no laborables")
 	@GetMapping("/get/medicosQueTrabajanDiasNoLaborables")
-	public List<Medico> medicosQueTrabajanDiasNoLaborables() {
-		return new ArrayList<Medico>();
+	public ResponseEntity<List<Medico>> medicosQueTrabajanDiasNoLaborables() {
+		ResponseEntity responseEntity;
+		try {
+			List<Medico> medicos = service.medicosQueTrabajanDiasNoLaborables();
+			if (medicos.size() == 0) throw new Exception();
+			responseEntity = ResponseEntity.status(HttpStatus.OK).body(medicos);
+		} catch (Exception e) {
+			String noFound = "Hubo un error, no se obtuvo resultados";
+			responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
+		}
+		return responseEntity;
 	}
-	
+
+
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan en una clinica en particular", response = Paciente.class, tags = "Medicos que trabajan en una clinica")
 	@GetMapping("/get/medicosPorClinica/{clinicaId}")
-	public List<Medico> medicosQueTrabajanDiasNoLaborables(@PathVariable("clinicaId") int clinicaId) {
-		return new ArrayList<Medico>();
+	public ResponseEntity<List<Medico>> medicosQueTrabajanDiasNoLaborables(@PathVariable("clinicaId") Long clinicaId) {
+		ResponseEntity response;
+		try {
+			List<Medico> medicos = service.medicosQueTrabajanDiasNoLaborablesClinica(clinicaId);
+			if (medicos.size() == 0) throw new Exception();
+			response = ResponseEntity.status(HttpStatus.OK).body(medicos);
+		} catch (Exception exception){
+			String noFound = "Hubo un error, no se obtuvo resultados, introduce una clinica valida";
+			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
+		}
+		return response;
 	}
+
 
 	@GetMapping("/get/pacientes")
 	public ResponseEntity<List<Paciente>> obtenerPacientes () {
@@ -146,4 +167,20 @@ public class ClinicaController {
 		return ResponseEntity.ok().body(service.obtenerClinicas());
 	}
 	
+
+
+	@PutMapping("/update/paciente/{id}")
+	public ResponseEntity<?> actualizarPaciente(@RequestBody Paciente paciente, @PathVariable Long id){
+		try {
+			service.updatePaciente(paciente, id);
+			String fineId = "EL paciente se actualizo en la db";
+			return ResponseEntity.status(HttpStatus.OK).body(fineId);
+		}catch (Exception e){
+			String badId = "No se pudo actualizar el paciente, verifica el id";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
+		}
+	}
+
+
+
 }

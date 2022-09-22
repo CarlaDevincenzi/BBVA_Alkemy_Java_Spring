@@ -22,4 +22,12 @@ public interface ClinicaService {
     List<Paciente> obtenerPacientesMedico (Long idMedico);
     List<Medico> obtenerMedicosPaciente (Long idPaciente);
 
+    List<Medico> medicosQueTrabajanDiasNoLaborables();
+    List<Medico> medicosQueTrabajanDiasNoLaborablesClinica(Long clinicaId);
+    Clinica getCLinicaById(Long clinicaId);
+    Paciente updatePaciente(Paciente paciente, Long pacienteId);
+
+
+
+
 }

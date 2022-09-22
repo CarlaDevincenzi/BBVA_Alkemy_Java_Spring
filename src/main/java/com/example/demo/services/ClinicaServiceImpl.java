@@ -152,4 +152,60 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return paciente.getMedicos();
 	}
 
+
+	@Override
+	public List<Medico> medicosQueTrabajanDiasNoLaborables() {
+		List<Medico> medicos = medicoRepository.findAll();
+		return  medicos.stream()
+				.filter(Medico::isTrabajaFinesSemanasYFeriados)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Clinica getCLinicaById(Long clinicaId) {
+		return clinicaRepository.findById(clinicaId).orElse(null);
+
+	}
+
+
+	@Override
+	public List<Medico> medicosQueTrabajanDiasNoLaborablesClinica(Long clinicaId) {
+		Clinica clinica = getCLinicaById(clinicaId);
+		List<Medico> medicos = medicoRepository.findAll();
+		List<Medico> medicoList = new ArrayList<>();
+
+		medicos.stream()
+				.filter(medico -> medico.getClinicaDondeTrabaja().equals(clinica) &&
+						medico.isTrabajaFinesSemanasYFeriados())
+				.forEach(medicoList::add);
+		return medicoList;
+	}
+
+	@Override
+	public Paciente updatePaciente(Paciente paciente, Long id){
+		Optional<Paciente> optPaciente = pacienteRepository.findById(id);
+		Paciente p;
+		if (optPaciente.isPresent()){
+			p = optPaciente.get();
+			p.setNombre(paciente.getNombre());
+			p.setApellido(paciente.getApellido());
+			p.setEmail(paciente.getEmail());
+			p.setEdad(paciente.getEdad());
+			p.setTelefono(paciente.getTelefono());
+			p.setFechaNacimiento(paciente.getFechaNacimiento());
+			p.setDni(paciente.getDni());
+			p.setFechaTurnoConMedico(paciente.getFechaTurnoConMedico());
+			p = pacienteRepository.save(p);
+
+			return p;
+		}
+		return null;
+
+	}
+
+
+
+
+
+
 }
