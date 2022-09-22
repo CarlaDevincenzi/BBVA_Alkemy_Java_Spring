@@ -203,11 +203,35 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	}
 
+
 	public void eliminarClinica (Long idClinica) {
 		clinicaRepository.deleteById(idClinica);
 	}
 
+	@Override
+	public double promedioPacientesAtendidosPorMedico() {
+		double cantidadPacientesAtendidos = pacienteRepository.findAll().size();
+		double promedioPacientes = 0;
+		int cantMedicos = medicoRepository.findAll().size();
 
+		promedioPacientes = cantidadPacientesAtendidos / cantMedicos;
+
+
+		return promedioPacientes;
+	}
+	@Override
+	public List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta) {
+		List<Paciente> pacientes = pacienteRepository.findAll();
+
+		List<Paciente> pacientesFecha = new ArrayList<>();
+		for (Paciente paciente : pacientes) {
+			if(paciente.getFechaTurnoConMedico().after(fechaDesde) && (paciente.getFechaTurnoConMedico().before(fechaHasta))){
+				pacientesFecha.add(paciente);
+			}
+		}
+
+		return pacientesFecha;
+	}
 
 
 }

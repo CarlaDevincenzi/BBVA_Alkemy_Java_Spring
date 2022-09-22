@@ -100,23 +100,11 @@ public class ClinicaController {
 	public double promedioPacientesAtendidosPorMedico(@PathVariable("medicoId") int medicoId) {
 		return 0;
 	}
-	
-	@ApiOperation(value = "Endpoint para poder obtener una lista con la cantidad de pacientes por cada una de las 4 categorias", response = List.class, tags = "Cantidad de pacientes por cada una de las categorias")
-	@GetMapping("/get/cantidadPacientesPorCategoria")
-	public List<Integer> cantidadPacientesPorCategoria() {
-		return new ArrayList<Integer>();
-	}
-	
-	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes que tienen mal formateado el email", response = Paciente.class, tags = "Pacientes con email mal formateado")
-	@GetMapping("/get/pacientesConEmailMalFormateado")
-	public List<Paciente> pacientesConEmailMalFormateado() {
-		return new ArrayList<Paciente>();
-	}
-	
+
 	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes en un rango de fechas", response = Paciente.class, tags = "Pacientes por rango de fechas")
-	@GetMapping("/get/pacientesEntreFechas")
+	@GetMapping("/get/pacientesEntreFechas/desde/{fechaDesde}/hasta/{fechaHasta}")
 	public List<Paciente> pacientesEntreFechas(@PathVariable("fechaDesde") Date fechaDesde, @PathVariable("fechaHasta") Date fechaHasta) {
-		return new ArrayList<Paciente>();
+		return service.pacientesEntreFechas(fechaDesde, fechaHasta);
 	}
 
 
@@ -168,9 +156,8 @@ public class ClinicaController {
 	public ResponseEntity<List<Clinica>> obtenerClinicas () {
 		return ResponseEntity.ok().body(service.obtenerClinicas());
 	}
-	
 
-
+	@ApiOperation(value = "Endpoint para poder actualizar un paciente", response = Paciente.class, tags = "Actualizacion de Paciente")
 	@PutMapping("/update/paciente/{id}")
 	public ResponseEntity<?> actualizarPaciente(@RequestBody Paciente paciente, @PathVariable Long id){
 		try {
@@ -183,9 +170,19 @@ public class ClinicaController {
 		}
 	}
 
+
+  @ApiOperation(value = "Endpoint para eliminar una clinica", response = Paciente.class, tags = "Eliminar clinica")
 	@DeleteMapping("/delete/clinica/{clinicaId}")
 	public void eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
 		service.eliminarClinica(clinicaId);
+  }
+  
+	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
+	@GetMapping("/get/promedioPacientesAtendidosPorMedico")
+	public double promedioPacientesAtendidosPorMedico() {
+
+		return service.promedioPacientesAtendidosPorMedico();
+
 	}
 
 }
