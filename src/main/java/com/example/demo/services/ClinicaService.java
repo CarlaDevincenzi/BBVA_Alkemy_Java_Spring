@@ -26,6 +26,8 @@ public interface ClinicaService {
     List<Medico> medicosQueTrabajanDiasNoLaborablesClinica(Long clinicaId);
     Clinica getCLinicaById(Long clinicaId);
     Paciente updatePaciente(Paciente paciente, Long pacienteId);
+    double promedioPacientesAtendidosPorMedico();
+    List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta);
 
 
 
