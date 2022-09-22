@@ -152,6 +152,23 @@ public class ClinicaController {
 	}
 
 
+	@GetMapping("/get/pacientes")
+	public ResponseEntity<List<Paciente>> obtenerPacientes () {
+		return ResponseEntity.ok().body(service.obtenerPacientes());
+	}
+
+	@GetMapping("/get/medicos")
+	public ResponseEntity<List<Medico>> obtenerMedicos () {
+		return ResponseEntity.ok().body(service.obtenerMedicos());
+	}
+
+	@GetMapping("/get/clinicas")
+	public ResponseEntity<List<Clinica>> obtenerClinicas () {
+		return ResponseEntity.ok().body(service.obtenerClinicas());
+	}
+	
+
+
 	@PutMapping("/update/paciente/{id}")
 	public ResponseEntity<?> actualizarPaciente(@RequestBody Paciente paciente, @PathVariable Long id){
 		try {
@@ -163,6 +180,7 @@ public class ClinicaController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
 		}
 	}
+
 
 
 }
