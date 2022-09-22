@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -68,8 +70,8 @@ public class ClinicaController {
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes que tuvo un medico", response = Paciente.class, tags = "Historial de pacientes de un medico")
 	@GetMapping("/get/historialPacientesMedico/{medicoId}")
-	public List<Paciente> historialPacientesMedico(@PathVariable("medicoId") int medicoId) {
-		return new ArrayList<Paciente>();
+	public ResponseEntity<List<Paciente>> historialPacientesMedico(@PathVariable("medicoId") Long medicoId) {
+		return ResponseEntity.ok().body(service.obtenerPacientesMedico(medicoId));
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista de medicos con los que se atendio un paciente", response = Paciente.class, tags = "Historial de medicos de un paciente")

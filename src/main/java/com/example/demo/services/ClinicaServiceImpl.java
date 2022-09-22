@@ -127,18 +127,24 @@ public class ClinicaServiceImpl implements ClinicaService {
 		int cantPacientes = 0;
 		Clinica clinica = getClinicaById(clinicaId);
 
-		if(clinica != null){
+		if (clinica != null) {
 			List<Medico> medicosClinica = clinica.getMedicos();
 
-			for(Medico med: medicosClinica){
-				for(Paciente paciente: med.getPacientes()){
-					if(paciente.getFechaTurnoConMedico().equals(fecha)){
+			for (Medico med : medicosClinica) {
+				for (Paciente paciente : med.getPacientes()) {
+					if (paciente.getFechaTurnoConMedico().equals(fecha)) {
 						cantPacientes++;
 					}
 				}
 			}
 		}
 		return cantPacientes;
+	}
+
+	public List<Paciente> obtenerPacientesMedico (Long idMedico) {
+		Medico medico = medicoRepository.findById(idMedico).get();
+		return medico.getPacientes();
+
 	}
 
 }
