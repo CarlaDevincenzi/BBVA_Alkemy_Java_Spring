@@ -16,4 +16,5 @@ public interface ClinicaService {
     List<Clinica> obtenerClinicas();
     List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha);
     List<Paciente> obtenerPacientesMedico (Long idMedico);
+    List<Medico> obtenerMedicosPaciente (Long idPaciente);
 }

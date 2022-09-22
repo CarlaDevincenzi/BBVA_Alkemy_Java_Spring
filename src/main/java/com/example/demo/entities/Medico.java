@@ -17,7 +17,7 @@ public class Medico {
 	private String email;
 	private String telefono;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "clinica_id", nullable = false)
 	private Clinica clinicaDondeTrabaja;
 
