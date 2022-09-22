@@ -13,6 +13,7 @@ import com.example.demo.entities.Paciente;
 import com.example.demo.repositories.ClinicaRepository;
 import com.example.demo.repositories.MedicoRepository;
 import com.example.demo.repositories.PacienteRepository;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class ClinicaServiceImpl implements ClinicaService {
@@ -61,8 +62,7 @@ public class ClinicaServiceImpl implements ClinicaService {
 	 * Usado para obtener una lista de pacientes de la tabla de pacientes
 	 * @return Lista de pacientes
 	 */
-	public List<Paciente> obtenerPacientes() {
-		return pacienteRepository.findAll();
+	public List<Paciente> obtenerPacientes() {return pacienteRepository.findAll();
 	}
 
 	/**
@@ -101,4 +101,26 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return pacientesFecha;
 	}
 
+	public double promedioPacientesAtendidosPorMedico() {
+		double cantidadPacientesAtendidos = pacienteRepository.findAll().size();
+		double promedioPacientes = 0;
+		int cantMedicos = medicoRepository.findAll().size();
+
+		promedioPacientes = cantidadPacientesAtendidos / cantMedicos;
+
+		return promedioPacientes;
+	}
+
+	public List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta) {
+		List<Paciente> pacientes = pacienteRepository.findAll();
+
+		List<Paciente> pacientesFecha = new ArrayList<>();
+		for (Paciente paciente : pacientes) {
+			if(paciente.getFechaTurnoConMedico().after(fechaDesde) && (paciente.getFechaTurnoConMedico().before(fechaHasta))){
+				pacientesFecha.add(paciente);
+			}
+		}
+
+		return pacientesFecha;
+	}
 }

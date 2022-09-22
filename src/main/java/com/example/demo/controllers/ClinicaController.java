@@ -89,9 +89,10 @@ public class ClinicaController {
 	}
 
 	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
-	@GetMapping("/get/promedioPacientesAtendidosPorMedico/{medicoId}")
-	public double promedioPacientesAtendidosPorMedico(@PathVariable("medicoId") int medicoId) {
-		return 0;
+	@GetMapping("/get/promedioPacientesAtendidosPorMedico")
+	public double promedioPacientesAtendidosPorMedico() {
+
+		return service.promedioPacientesAtendidosPorMedico();
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista con la cantidad de pacientes por cada una de las 4 categorias", response = List.class, tags = "Cantidad de pacientes por cada una de las categorias")
@@ -107,9 +108,9 @@ public class ClinicaController {
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener una lista de pacientes en un rango de fechas", response = Paciente.class, tags = "Pacientes por rango de fechas")
-	@GetMapping("/get/pacientesEntreFechas")
+	@GetMapping("/get/pacientesEntreFechas/desde/{fechaDesde}/hasta/{fechaHasta}")
 	public List<Paciente> pacientesEntreFechas(@PathVariable("fechaDesde") Date fechaDesde, @PathVariable("fechaHasta") Date fechaHasta) {
-		return new ArrayList<Paciente>();
+		return service.pacientesEntreFechas(fechaDesde, fechaHasta);
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan los fines de semana y o feriados", response = Paciente.class, tags = "Medicos que trabajan dias no laborables")

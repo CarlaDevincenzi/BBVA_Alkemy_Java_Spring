@@ -15,4 +15,8 @@ public interface ClinicaService {
     List<Medico> obtenerMedicos();
     List<Clinica> obtenerClinicas();
     List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha);
+
+    public double promedioPacientesAtendidosPorMedico();
+
+    public List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta);
 }
