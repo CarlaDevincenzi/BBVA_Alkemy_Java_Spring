@@ -7,13 +7,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import com.example.demo.entities.DiaSemanaEnum;
+import com.example.demo.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entities.Clinica;
-import com.example.demo.entities.Medico;
-import com.example.demo.entities.Paciente;
 import com.example.demo.repositories.ClinicaRepository;
 import com.example.demo.repositories.MedicoRepository;
 import com.example.demo.repositories.PacienteRepository;
@@ -238,6 +235,17 @@ public class ClinicaServiceImpl implements ClinicaService {
 		}
 
 		return pacientesFecha;
+	}
+
+	public Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id){
+		Optional<Paciente> p = pacienteRepository.findById(id);
+		Paciente paciente = null;
+		if(p.isPresent()){
+			paciente = p.get();
+			paciente.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
+			pacienteRepository.save(paciente);
+		}
+		return paciente;
 	}
 
 
