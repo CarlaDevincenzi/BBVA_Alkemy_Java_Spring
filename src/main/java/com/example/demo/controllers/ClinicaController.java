@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.demo.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
@@ -14,10 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.entities.Clinica;
-import com.example.demo.entities.DiaSemanaEnum;
-import com.example.demo.entities.Medico;
-import com.example.demo.entities.Paciente;
 import com.example.demo.services.ClinicaService;
 
 import io.swagger.annotations.ApiOperation;
@@ -213,6 +210,20 @@ public class ClinicaController {
 
 		return service.promedioPacientesAtendidosPorMedico();
 
+	}
+
+	@ApiOperation(value = "Endpoint para poder actualizar el turno de un paciente", response = Paciente.class, tags = "Actualizacion de turno de un Paciente")
+	@PatchMapping("/update/pacienteTurno/{id}")
+	public ResponseEntity<?> actualizarTurnoPaciente(@RequestBody CambioTurno cambioTurno, @PathVariable Long id){
+		try {
+			Paciente p = service.updateTurnoPaciente(cambioTurno, id);
+			if(p == null){
+				throw new Exception("No se pudo actualizar el paciente, verifica el id");
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(p);
+		}catch (Exception e){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 
 }

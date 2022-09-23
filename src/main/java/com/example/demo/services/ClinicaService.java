@@ -1,9 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.entities.Clinica;
-import com.example.demo.entities.DiaSemanaEnum;
-import com.example.demo.entities.Medico;
-import com.example.demo.entities.Paciente;
+import com.example.demo.entities.*;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
@@ -31,6 +28,7 @@ public interface ClinicaService {
 
     double promedioPacientesAtendidosPorMedico();
     List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta);
+    Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id);
 
 
 
