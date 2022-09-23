@@ -165,11 +165,19 @@ public class ClinicaController {
 	}
 
 
-  @ApiOperation(value = "Endpoint para eliminar una clinica", response = Paciente.class, tags = "Eliminar clinica")
+	@ApiOperation(value = "Endpoint para eliminar una clínica", tags = "Eliminar clínica")
 	@DeleteMapping("/delete/clinica/{clinicaId}")
-	public void eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
-		service.eliminarClinica(clinicaId);
-  }
+	public ResponseEntity<String> eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
+		try {
+			service.eliminarClinica(clinicaId);
+			String idExist = "Clínica eliminada";
+			return ResponseEntity.ok().body(idExist);
+		}
+		catch (Exception exception) {
+			String idNotExist = "Ingrese un id de clínica existente";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(idNotExist);
+		}
+	}
   
 	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Paciente.class, tags = "Promedio de pacientes de los medico")
 	@GetMapping("/get/promedioPacientesAtendidosPorMedico")
