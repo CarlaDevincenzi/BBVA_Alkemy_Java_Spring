@@ -105,10 +105,16 @@ public class ClinicaController {
 	
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan en un dia de la semana", response = Medico.class, tags = "Medicos que trabajan un dia especifico de la semana")
 	@GetMapping("/get/medicosQueTrabajanDia/{diaSemana}")
-	public ResponseEntity<List<Medico>> medicosQueTrabajanDia(@PathVariable("diaSemana") DiaSemanaEnum diaSemana) {
-
-		List<Medico> medicosDia = service.obtenerMedicosQueTrabajanDiaSemana(diaSemana);
-		return ResponseEntity.status(HttpStatus.OK).body(medicosDia);
+	public ResponseEntity<?> medicosQueTrabajanDia(@PathVariable("diaSemana") DiaSemanaEnum diaSemana) {
+		try {
+			List<Medico> medicos = service.obtenerMedicosQueTrabajanDiaSemana(diaSemana);
+			if (medicos.isEmpty()){
+				throw new Exception("No hay medicos que trabajen en ese dia");
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(medicos);
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		}
 	}
 	
 	@ApiOperation(value = "Endpoint para poder obtener la cantidad de pacientes que tiene una clinica para una fecha en particular", response = Integer.class, tags = "Cantidad de pacientes de una clinica por fecha")
@@ -142,7 +148,7 @@ public class ClinicaController {
 
 
 	@ApiOperation(value = "Endpoint para poder obtener los medicos que trabajan en una clinica en particular", response = Medico.class, tags = "Medicos que trabajan en una clinica")
-	@GetMapping("/get/medicosPorClinica/{clinicaId}")
+	@GetMapping("/get/medicosPorClinicaDiaNoLaborable/{clinicaId}")
 	public ResponseEntity<List<Medico>> medicosQueTrabajanDiasNoLaborables(@PathVariable("clinicaId") Long clinicaId) {
 		ResponseEntity response;
 		try {
@@ -150,7 +156,7 @@ public class ClinicaController {
 			if (medicos.size() == 0) throw new Exception();
 			response = ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception exception){
-			String noFound = "Hubo un error, no se obtuvo resultados, introduce una clinica valida";
+			String noFound = "No se obtuvieron resultados";
 			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 		return response;
