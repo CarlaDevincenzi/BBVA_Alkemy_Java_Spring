@@ -1,14 +1,19 @@
 package com.example.demo.controllers;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import com.example.demo.dto.ClinicaDto;
+import com.example.demo.dto.MedicoDto;
+import com.example.demo.dto.PacienteDto;
 import com.example.demo.entities.*;
+import com.example.demo.model.PacienteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -26,6 +31,12 @@ public class ClinicaController {
 	@Autowired
 	private ClinicaService service;
 
+	@Autowired
+	private PacienteConverter pacienteConverter;
+
+	@Autowired
+	private MessageSource messageSource;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -41,16 +52,33 @@ public class ClinicaController {
 	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = Paciente.class, tags = "Agregar paciente")
 	@PostMapping("/add/paciente")
     public Paciente cargarPaciente(@RequestBody Paciente paciente) {
-
 		return service.guardarPaciente(paciente);
     }
-	
+
+    /*End Point con Model Mapper*/
+	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = PacienteDto.class, tags = "Agregar paciente con ModelMapper")
+	@PostMapping("/add/pacienteDto")
+	public ResponseEntity<PacienteDto> savePaciente(@RequestBody PacienteDto pacienteDto) {
+		pacienteDto = service.savePaciente(pacienteDto);
+		ResponseEntity<PacienteDto> responseEntity = new ResponseEntity<>(pacienteDto, HttpStatus.CREATED);
+		return  responseEntity;
+	}
+
+
+    /*End Point de Medico*/
 	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = Medico.class, tags = "Agregar medico")
 	@PostMapping("/add/medico")
     public Medico cargarMedico(@RequestBody Medico medico) {
-
 		return service.guardarMedico(medico);
     }
+
+	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = Medico.class, tags = "Agregar medico usando DTO")
+	@PostMapping("/add/medicodto")
+	public ResponseEntity<MedicoDto> addMedico(@RequestBody MedicoDto medicoDto) {
+		medicoDto = service.addMedico(medicoDto);
+		ResponseEntity<MedicoDto> responseEntity = new ResponseEntity<>(medicoDto, HttpStatus.CREATED);
+		return responseEntity;
+	}
 	
 	@ApiOperation(value = "Endpoint para poder agregar una clinica a la lista de clinicas", response = Clinica.class, tags = "Agregar clinica")
 	@PostMapping("/add/clinica")
@@ -58,6 +86,14 @@ public class ClinicaController {
 
 		return service.guardarClinica(clinica);
     }
+
+	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = ClinicaDto.class, tags = "Agregar clinica usando DTO")
+	@PostMapping("/add/clinicadto")
+	public ResponseEntity<ClinicaDto> addCLinica(@RequestBody ClinicaDto clinicaDto) {
+		clinicaDto = service.addClinica(clinicaDto);
+		ResponseEntity<ClinicaDto> responseEntity = new ResponseEntity<>(clinicaDto, HttpStatus.CREATED);
+		return responseEntity;
+	}
 
 	@ApiOperation(value = "Endpoint para poder una lista de pacientes filtrando por medico y por fecha de turno con el medico", response = Paciente.class, tags = "Pacientes por medico y fecha")
 	@GetMapping("/get/pacientesPorMedicoYFecha/{medicoId}/{fecha}")
@@ -99,7 +135,8 @@ public class ClinicaController {
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+			String noFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 	}
 	
@@ -112,8 +149,9 @@ public class ClinicaController {
 				throw new Exception("No hay medicos que trabajen en ese dia");
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(medicos);
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		} catch (Exception e) {
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 	}
 	
@@ -140,7 +178,7 @@ public class ClinicaController {
 			if (medicos.size() == 0) throw new Exception();
 			responseEntity = ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception e) {
-			String noFound = "Hubo un error, no se obtuvo resultados";
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);
 			responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 		return responseEntity;
@@ -156,7 +194,7 @@ public class ClinicaController {
 			if (medicos.size() == 0) throw new Exception();
 			response = ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception exception){
-			String noFound = "No se obtuvieron resultados";
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);		;
 			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 		return response;
@@ -187,11 +225,26 @@ public class ClinicaController {
 			if(service.updatePaciente(paciente, id) == null){
 				throw new Exception();
 			}
-			String fineId = "EL paciente se actualizo en la db";
-			return ResponseEntity.status(HttpStatus.OK).body(fineId);
+			String successMsg = messageSource.getMessage("success.fine.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.OK).body(successMsg);
 		}catch (Exception e){
-			String badId = "No se pudo actualizar el paciente, verifica el id";
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
+			String notFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notFound);
+		}
+	}
+
+	@ApiOperation(value = "Endpoint para poder actualizar un paciente", response = Paciente.class, tags = "Actualizacion de Paciente")
+	@PutMapping("/update/pacientedto/{id}")
+	public ResponseEntity<?> updaterPaciente(@RequestBody PacienteDto pacientedto, @PathVariable Long id){
+		try {
+			if(service.actualizarPaciente(pacientedto, id) == null){
+				throw new Exception();
+			}
+			String successMsg = messageSource.getMessage("success.fine.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.OK).body(successMsg);
+		}catch (Exception e){
+			String notFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notFound);
 		}
 	}
 
@@ -201,11 +254,11 @@ public class ClinicaController {
 	public ResponseEntity<String> eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
 		try {
 			service.eliminarClinica(clinicaId);
-			String idExist = "Clínica eliminada";
+			String idExist = messageSource.getMessage("success.delete", new String[]{"Clinica"}, Locale.US);
 			return ResponseEntity.ok().body(idExist);
 		}
 		catch (Exception exception) {
-			String idNotExist = "Ingrese un id de clínica existente";
+			String idNotExist = messageSource.getMessage("bad.id", new String[]{"Clinica"}, Locale.US);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(idNotExist);
 		}
 	}
@@ -226,6 +279,7 @@ public class ClinicaController {
 			if(p == null){
 				throw new Exception("No se pudo actualizar el paciente, verifica el id");
 			}
+
 			return ResponseEntity.status(HttpStatus.OK).body(p);
 		}catch (Exception e){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

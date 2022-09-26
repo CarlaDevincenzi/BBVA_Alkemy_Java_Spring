@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.example.demo.dto.ClinicaDto;
+import com.example.demo.dto.MedicoDto;
+import com.example.demo.dto.PacienteDto;
 import com.example.demo.entities.*;
+import com.example.demo.model.PacienteConverter;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +34,11 @@ public class ClinicaServiceImpl implements ClinicaService {
 	@Autowired
 	private PacienteRepository pacienteRepository;
 
+	@Autowired
+	PacienteConverter pacienteConverter;
+
+
+
 	/**
 	 * Usado para crear un nuevo paciente en la tabla de pacientes
 	 * @param nuevoPaciente
@@ -37,8 +47,26 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	public Paciente guardarPaciente(Paciente nuevoPaciente) {
 		return pacienteRepository.save(nuevoPaciente);
+	}
+
+	/*Prueba con BeanUtils*/
+	public PacienteDto addPaciente(PacienteDto pacienteDto){
+		Paciente pacienteEntity = new Paciente();
+		BeanUtils.copyProperties(pacienteDto, pacienteEntity); // dto recibe todos los campos del entity
+		pacienteEntity = pacienteRepository.save(pacienteEntity);
+		BeanUtils.copyProperties(pacienteEntity, pacienteDto); // convierte entidad en el dto
+		return  pacienteDto;
+	}
+
+	/*Prueba con Model Mapper*/
+	public PacienteDto  savePaciente(PacienteDto pacienteDto) {
+		Paciente paciente = pacienteConverter.convertDtoToEntity(pacienteDto);
+		paciente = pacienteRepository.save(paciente);
+		return pacienteConverter.converteEntityToDto(paciente);
 
 	}
+
+
 
 	/**
 	 * Usado para crear un nuevo medico en la tabla de medicos
@@ -50,6 +78,14 @@ public class ClinicaServiceImpl implements ClinicaService {
 
 	}
 
+	public MedicoDto addMedico(MedicoDto medicoDto){
+		Medico medico = new Medico();
+		BeanUtils.copyProperties(medicoDto, medico);
+		medico = medicoRepository.save(medico);
+		BeanUtils.copyProperties(medico, medicoDto);
+		return medicoDto;
+	}
+
 	/**
 	 * Usado para crear una nueva clinica en la tabla de clinicas
 	 * @param nuevaClinica
@@ -57,8 +93,20 @@ public class ClinicaServiceImpl implements ClinicaService {
 	 */
 	public Clinica guardarClinica(Clinica nuevaClinica) {
 		return clinicaRepository.save(nuevaClinica);
-
 	}
+
+	@Override
+	public ClinicaDto addClinica(ClinicaDto clinicadto) {
+		Clinica clinica = new Clinica();
+		BeanUtils.copyProperties(clinicadto, clinica);
+		clinica = clinicaRepository.save(clinica);
+		BeanUtils.copyProperties(clinica,clinicadto);
+
+		return clinicadto;
+	}
+
+
+
 
 	/**
 	 * Usado para obtener una lista de pacientes de la tabla de pacientes
@@ -200,6 +248,23 @@ public class ClinicaServiceImpl implements ClinicaService {
 		}
 		return null;
 
+	}
+
+	/*Actualizar con lamda*/
+	public PacienteDto actualizarPaciente(PacienteDto pacientedto, Long id){
+		pacienteRepository.findById(id).map(paciente -> {
+			paciente.setNombre(pacientedto.getNombre());
+			paciente.setApellido(pacientedto.getApellido());
+			paciente.setDni(pacientedto.getDni());
+			paciente.setEdad(pacientedto.getEdad());
+			paciente.setFechaNacimiento(pacientedto.getFechaNacimiento());
+			paciente.setFechaTurnoConMedico(pacientedto.getFechaTurnoConMedico());
+			paciente.setTelefono(pacientedto.getTelefono());
+			paciente.setEmail(pacientedto.getEmail());
+			paciente.setMedicos(pacientedto.getMedicos());
+			return pacienteRepository.save(paciente);
+		}).orElseThrow(NullPointerException::new);
+		return pacientedto;
 	}
 
 
