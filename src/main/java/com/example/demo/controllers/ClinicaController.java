@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.example.demo.dto.ClinicaDto;
 import com.example.demo.dto.MedicoDto;
@@ -12,6 +13,7 @@ import com.example.demo.model.PacienteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,9 @@ public class ClinicaController {
 
 	@Autowired
 	private PacienteConverter pacienteConverter;
+
+	@Autowired
+	private MessageSource messageSource;
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
@@ -130,7 +135,8 @@ public class ClinicaController {
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+			String noFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 	}
 	
@@ -143,8 +149,9 @@ public class ClinicaController {
 				throw new Exception("No hay medicos que trabajen en ese dia");
 			}
 			return ResponseEntity.status(HttpStatus.OK).body(medicos);
-		} catch (Exception ex) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+		} catch (Exception e) {
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 	}
 	
@@ -171,7 +178,7 @@ public class ClinicaController {
 			if (medicos.size() == 0) throw new Exception();
 			responseEntity = ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception e) {
-			String noFound = "Hubo un error, no se obtuvo resultados";
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);
 			responseEntity = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 		return responseEntity;
@@ -187,7 +194,7 @@ public class ClinicaController {
 			if (medicos.size() == 0) throw new Exception();
 			response = ResponseEntity.status(HttpStatus.OK).body(medicos);
 		} catch (Exception exception){
-			String noFound = "No se obtuvieron resultados";
+			String noFound = messageSource.getMessage("no.records.found.medico", new String[]{"Medico"}, Locale.US);		;
 			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(noFound);
 		}
 		return response;
@@ -218,11 +225,11 @@ public class ClinicaController {
 			if(service.updatePaciente(paciente, id) == null){
 				throw new Exception();
 			}
-			String fineId = "EL paciente se actualizo en la db";
-			return ResponseEntity.status(HttpStatus.OK).body(fineId);
+			String successMsg = messageSource.getMessage("success.fine.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.OK).body(successMsg);
 		}catch (Exception e){
-			String badId = "No se pudo actualizar el paciente, verifica el id";
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
+			String notFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notFound);
 		}
 	}
 
@@ -233,11 +240,11 @@ public class ClinicaController {
 			if(service.actualizarPaciente(pacientedto, id) == null){
 				throw new Exception();
 			}
-			String fineId = "EL paciente se actualizo en la db";
-			return ResponseEntity.status(HttpStatus.OK).body(fineId);
+			String successMsg = messageSource.getMessage("success.fine.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.OK).body(successMsg);
 		}catch (Exception e){
-			String badId = "No se pudo actualizar el paciente, verifica el id";
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
+			String notFound = messageSource.getMessage("no.records.found.paciente", new String[]{"Paciente"}, Locale.US);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notFound);
 		}
 	}
 
@@ -247,11 +254,11 @@ public class ClinicaController {
 	public ResponseEntity<String> eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
 		try {
 			service.eliminarClinica(clinicaId);
-			String idExist = "Clínica eliminada";
+			String idExist = messageSource.getMessage("success.delete", new String[]{"Clinica"}, Locale.US);
 			return ResponseEntity.ok().body(idExist);
 		}
 		catch (Exception exception) {
-			String idNotExist = "Ingrese un id de clínica existente";
+			String idNotExist = messageSource.getMessage("bad.id", new String[]{"Clinica"}, Locale.US);
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(idNotExist);
 		}
 	}
@@ -272,6 +279,7 @@ public class ClinicaController {
 			if(p == null){
 				throw new Exception("No se pudo actualizar el paciente, verifica el id");
 			}
+
 			return ResponseEntity.status(HttpStatus.OK).body(p);
 		}catch (Exception e){
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
