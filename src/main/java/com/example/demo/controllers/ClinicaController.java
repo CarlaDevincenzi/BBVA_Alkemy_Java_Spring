@@ -1,11 +1,14 @@
 package com.example.demo.controllers;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.demo.dto.ClinicaDto;
+import com.example.demo.dto.MedicoDto;
+import com.example.demo.dto.PacienteDto;
 import com.example.demo.entities.*;
+import com.example.demo.model.PacienteConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 
@@ -26,6 +29,9 @@ public class ClinicaController {
 	@Autowired
 	private ClinicaService service;
 
+	@Autowired
+	private PacienteConverter pacienteConverter;
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -41,16 +47,33 @@ public class ClinicaController {
 	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = Paciente.class, tags = "Agregar paciente")
 	@PostMapping("/add/paciente")
     public Paciente cargarPaciente(@RequestBody Paciente paciente) {
-
 		return service.guardarPaciente(paciente);
     }
-	
+
+    /*End Point con Model Mapper*/
+	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = PacienteDto.class, tags = "Agregar paciente con ModelMapper")
+	@PostMapping("/add/pacienteDto")
+	public ResponseEntity<PacienteDto> savePaciente(@RequestBody PacienteDto pacienteDto) {
+		pacienteDto = service.savePaciente(pacienteDto);
+		ResponseEntity<PacienteDto> responseEntity = new ResponseEntity<>(pacienteDto, HttpStatus.CREATED);
+		return  responseEntity;
+	}
+
+
+    /*End Point de Medico*/
 	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = Medico.class, tags = "Agregar medico")
 	@PostMapping("/add/medico")
     public Medico cargarMedico(@RequestBody Medico medico) {
-
 		return service.guardarMedico(medico);
     }
+
+	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = Medico.class, tags = "Agregar medico usando DTO")
+	@PostMapping("/add/medicodto")
+	public ResponseEntity<MedicoDto> addMedico(@RequestBody MedicoDto medicoDto) {
+		medicoDto = service.addMedico(medicoDto);
+		ResponseEntity<MedicoDto> responseEntity = new ResponseEntity<>(medicoDto, HttpStatus.CREATED);
+		return responseEntity;
+	}
 	
 	@ApiOperation(value = "Endpoint para poder agregar una clinica a la lista de clinicas", response = Clinica.class, tags = "Agregar clinica")
 	@PostMapping("/add/clinica")
@@ -58,6 +81,14 @@ public class ClinicaController {
 
 		return service.guardarClinica(clinica);
     }
+
+	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = ClinicaDto.class, tags = "Agregar clinica usando DTO")
+	@PostMapping("/add/clinicadto")
+	public ResponseEntity<ClinicaDto> addCLinica(@RequestBody ClinicaDto clinicaDto) {
+		clinicaDto = service.addClinica(clinicaDto);
+		ResponseEntity<ClinicaDto> responseEntity = new ResponseEntity<>(clinicaDto, HttpStatus.CREATED);
+		return responseEntity;
+	}
 
 	@ApiOperation(value = "Endpoint para poder una lista de pacientes filtrando por medico y por fecha de turno con el medico", response = Paciente.class, tags = "Pacientes por medico y fecha")
 	@GetMapping("/get/pacientesPorMedicoYFecha/{medicoId}/{fecha}")
@@ -185,6 +216,21 @@ public class ClinicaController {
 	public ResponseEntity<?> actualizarPaciente(@RequestBody Paciente paciente, @PathVariable Long id){
 		try {
 			if(service.updatePaciente(paciente, id) == null){
+				throw new Exception();
+			}
+			String fineId = "EL paciente se actualizo en la db";
+			return ResponseEntity.status(HttpStatus.OK).body(fineId);
+		}catch (Exception e){
+			String badId = "No se pudo actualizar el paciente, verifica el id";
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badId);
+		}
+	}
+
+	@ApiOperation(value = "Endpoint para poder actualizar un paciente", response = Paciente.class, tags = "Actualizacion de Paciente")
+	@PutMapping("/update/pacientedto/{id}")
+	public ResponseEntity<?> updaterPaciente(@RequestBody PacienteDto pacientedto, @PathVariable Long id){
+		try {
+			if(service.actualizarPaciente(pacientedto, id) == null){
 				throw new Exception();
 			}
 			String fineId = "EL paciente se actualizo en la db";
