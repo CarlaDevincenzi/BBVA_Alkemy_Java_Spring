@@ -8,6 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.example.demo.entities.*;
+<<<<<<< Updated upstream
+=======
+import com.example.demo.model.PacienteConverter;
+import com.example.demo.services.imple.ClinicaService;
+import org.springframework.beans.BeanUtils;
+>>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,31 +31,45 @@ public class ClinicaServiceImpl implements ClinicaService {
 	
 	@Autowired
 	private MedicoRepository medicoRepository;
-	
+
+<<<<<<< Updated upstream
+=======
 	@Autowired
 	private PacienteRepository pacienteRepository;
+	
 
+
+
+>>>>>>> Stashed changes
 	/**
 	 * Usado para crear un nuevo paciente en la tabla de pacientes
 	 * @param nuevoPaciente
 	 * @return
 	 */
 
+<<<<<<< Updated upstream
 	public Paciente guardarPaciente(Paciente nuevoPaciente) {
 		return pacienteRepository.save(nuevoPaciente);
 
 	}
 
+=======
+
+
+
+
+
+>>>>>>> Stashed changes
 	/**
 	 * Usado para crear un nuevo medico en la tabla de medicos
 	 * @param nuevoMedico
 	 * @return
 	 */
-	public Medico guardarMedico(Medico nuevoMedico) {
-		return medicoRepository.save(nuevoMedico);
 
-	}
+<<<<<<< Updated upstream
+=======
 
+>>>>>>> Stashed changes
 	/**
 	 * Usado para crear una nueva clinica en la tabla de clinicas
 	 * @param nuevaClinica
@@ -64,17 +84,13 @@ public class ClinicaServiceImpl implements ClinicaService {
 	 * Usado para obtener una lista de pacientes de la tabla de pacientes
 	 * @return Lista de pacientes
 	 */
-	public List<Paciente> obtenerPacientes() {
-		return pacienteRepository.findAll();
-	}
+
 
 	/**
 	 * Usado para obtener una lista de medicos de la tabla de medicos
 	 * @return Lista de medicos
 	 */
-	public List<Medico> obtenerMedicos() {
-		return medicoRepository.findAll();
-	}
+
 
 	/**
 	 * Usado para obtener una lista de clinicas de la tabla de clinicas
@@ -84,34 +100,6 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return clinicaRepository.findAll();
 	}
 
-	@Override
-	public List<Paciente> obtenerPacienteFechaDelMedico(Long id, Date fecha) {
-		List<Medico> medicos = obtenerMedicos();
-		Medico med = null;
-		for (Medico medico : medicos){
-			if(medico.getMedicoId() == id){
-				med = medico;
-				break;
-			}
-		}
-		List<Paciente> pacientesFecha = new ArrayList<>();
-		for (Paciente pacte : med.getPacientes()){
-			if(pacte.getFechaTurnoConMedico().equals(fecha)){
-				pacientesFecha.add(pacte);
-			}
-		}
-
-		return pacientesFecha;
-	}
-
-	@Override
-	public List<Medico> obtenerMedicosQueTrabajanDiaSemana(DiaSemanaEnum diaSemana) {
-		List<Medico> medicosDia = obtenerMedicos().stream()
-				.filter(medico -> medico.getDiaSemanaDisponible().equals(diaSemana))
-				.collect(Collectors.toList());
-
-		return medicosDia;
-	}
 
 	public Clinica getClinicaById(long clinicaId){
 		Optional<Clinica> clinica = obtenerClinicas().stream()
@@ -121,44 +109,7 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return clinica.isPresent() ? clinica.get() : null;
 	}
 
-	@Override
-	public int obtenerCantidadPacientesClinicaFecha(long clinicaId, Date fecha) {
-		int cantPacientes = 0;
-		Clinica clinica = getClinicaById(clinicaId);
 
-		if (clinica != null) {
-			List<Medico> medicosClinica = clinica.getMedicos();
-
-			for (Medico med : medicosClinica) {
-				for (Paciente paciente : med.getPacientes()) {
-					if (paciente.getFechaTurnoConMedico().equals(fecha)) {
-						cantPacientes++;
-					}
-				}
-			}
-		}
-		return cantPacientes;
-	}
-
-	public List<Paciente> obtenerPacientesMedico (Long idMedico) {
-		Medico medico = medicoRepository.findById(idMedico).orElse(null);
-		return medico.getPacientes();
-
-	}
-
-	public List<Medico> obtenerMedicosPaciente (Long idPaciente) {
-		Paciente paciente = pacienteRepository.findById(idPaciente).orElse(null);
-		return paciente.getMedicos();
-	}
-
-
-	@Override
-	public List<Medico> medicosQueTrabajanDiasNoLaborables() {
-		List<Medico> medicos = medicoRepository.findAll();
-		return  medicos.stream()
-				.filter(Medico::isTrabajaFinesSemanasYFeriados)
-				.collect(Collectors.toList());
-	}
 
 	@Override
 	public Clinica getCLinicaById(Long clinicaId) {
@@ -167,6 +118,7 @@ public class ClinicaServiceImpl implements ClinicaService {
 	}
 
 
+<<<<<<< Updated upstream
 	@Override
 	public List<Medico> medicosQueTrabajanDiasNoLaborablesClinica(Long clinicaId) {
 		Clinica clinica = getCLinicaById(clinicaId);
@@ -203,6 +155,8 @@ public class ClinicaServiceImpl implements ClinicaService {
 	}
 
 
+=======
+>>>>>>> Stashed changes
 	public void eliminarClinica (Long idClinica) {
 		if (clinicaRepository.existsById(idClinica)) {
 			clinicaRepository.deleteById(idClinica);
@@ -212,41 +166,6 @@ public class ClinicaServiceImpl implements ClinicaService {
 		}
 	}
 
-	@Override
-	public double promedioPacientesAtendidosPorMedico() {
-		double cantidadPacientesAtendidos = pacienteRepository.findAll().size();
-		double promedioPacientes = 0;
-		int cantMedicos = medicoRepository.findAll().size();
-
-		promedioPacientes = cantidadPacientesAtendidos / cantMedicos;
-
-
-		return promedioPacientes;
-	}
-	@Override
-	public List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta) {
-		List<Paciente> pacientes = pacienteRepository.findAll();
-
-		List<Paciente> pacientesFecha = new ArrayList<>();
-		for (Paciente paciente : pacientes) {
-			if(paciente.getFechaTurnoConMedico().after(fechaDesde) && (paciente.getFechaTurnoConMedico().before(fechaHasta))){
-				pacientesFecha.add(paciente);
-			}
-		}
-
-		return pacientesFecha;
-	}
-
-	public Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id){
-		Optional<Paciente> p = pacienteRepository.findById(id);
-		Paciente paciente = null;
-		if(p.isPresent()){
-			paciente = p.get();
-			paciente.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
-			pacienteRepository.save(paciente);
-		}
-		return paciente;
-	}
 
 
 }

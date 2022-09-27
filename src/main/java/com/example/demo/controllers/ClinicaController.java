@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.services.ClinicaService;
+import com.example.demo.services.imple.ClinicaService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -26,11 +26,18 @@ public class ClinicaController {
 	@Autowired
 	private ClinicaService service;
 
+<<<<<<< Updated upstream
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
 	}
+=======
+
+	@Autowired
+	private MessageSource messageSource;
+
+>>>>>>> Stashed changes
 	
 	@ApiOperation(value = "Endpoint de prueba para saber que funciona las API", response = String.class, tags = "Endpoint prueba API")
 	@GetMapping("/hello")
@@ -38,6 +45,7 @@ public class ClinicaController {
 		return "Funciona el controlador";
 	}
 	
+<<<<<<< Updated upstream
 	@ApiOperation(value = "Endpoint para poder agregar un paciente a la lista de pacientes", response = Paciente.class, tags = "Agregar paciente")
 	@PostMapping("/add/paciente")
     public Paciente cargarPaciente(@RequestBody Paciente paciente) {
@@ -52,6 +60,8 @@ public class ClinicaController {
 		return service.guardarMedico(medico);
     }
 	
+=======
+>>>>>>> Stashed changes
 	@ApiOperation(value = "Endpoint para poder agregar una clinica a la lista de clinicas", response = Clinica.class, tags = "Agregar clinica")
 	@PostMapping("/add/clinica")
     public Clinica cargarClinica(@RequestBody Clinica clinica) {
@@ -59,6 +69,7 @@ public class ClinicaController {
 		return service.guardarClinica(clinica);
     }
 
+<<<<<<< Updated upstream
 	@ApiOperation(value = "Endpoint para poder una lista de pacientes filtrando por medico y por fecha de turno con el medico", response = Paciente.class, tags = "Pacientes por medico y fecha")
 	@GetMapping("/get/pacientesPorMedicoYFecha/{medicoId}/{fecha}")
 	public ResponseEntity<?> pacientesPorMedicoYFecha(@PathVariable("medicoId") Long medicoId, @PathVariable("fecha") Date fecha) {
@@ -174,12 +185,23 @@ public class ClinicaController {
 		return ResponseEntity.ok().body(service.obtenerMedicos());
 	}
 
+=======
+	@ApiOperation(value = "Endpoint para poder agregar un medico a la lista de medicos", response = ClinicaDto.class, tags = "Agregar clinica usando DTO")
+	@PostMapping("/add/clinicadto")
+	public ResponseEntity<ClinicaDto> addCLinica(@RequestBody ClinicaDto clinicaDto) {
+		clinicaDto = service.addClinica(clinicaDto);
+		ResponseEntity<ClinicaDto> responseEntity = new ResponseEntity<>(clinicaDto, HttpStatus.CREATED);
+		return responseEntity;
+	}
+
+>>>>>>> Stashed changes
 	@ApiOperation(value = "Endpoint para poder obtener todas los clínicas", response = Clinica.class, tags = "Todas los clínicas")
 	@GetMapping("/get/clinicas")
 	public ResponseEntity<List<Clinica>> obtenerClinicas () {
 		return ResponseEntity.ok().body(service.obtenerClinicas());
 	}
 
+<<<<<<< Updated upstream
 	@ApiOperation(value = "Endpoint para poder actualizar un paciente", response = Paciente.class, tags = "Actualizacion de Paciente")
 	@PutMapping("/update/paciente/{id}")
 	public ResponseEntity<?> actualizarPaciente(@RequestBody Paciente paciente, @PathVariable Long id){
@@ -196,6 +218,8 @@ public class ClinicaController {
 	}
 
 
+=======
+>>>>>>> Stashed changes
 	@ApiOperation(value = "Endpoint para eliminar una clínica", tags = "Eliminar clínica")
 	@DeleteMapping("/delete/clinica/{clinicaId}")
 	public ResponseEntity<String> eliminarClinica (@PathVariable("clinicaId") Long clinicaId) {
@@ -210,14 +234,8 @@ public class ClinicaController {
 		}
 	}
   
-	@ApiOperation(value = "Endpoint para poder obtener el promedio de pacientes atendidos por todos los medicos", response = Double.class, tags = "Promedio de pacientes de los medico")
-	@GetMapping("/get/promedioPacientesAtendidosPorMedico")
-	public double promedioPacientesAtendidosPorMedico() {
 
-		return service.promedioPacientesAtendidosPorMedico();
-
-	}
-
+<<<<<<< Updated upstream
 	@ApiOperation(value = "Endpoint para poder actualizar el turno de un paciente", response = Paciente.class, tags = "Actualizacion de turno de un Paciente")
 	@PatchMapping("/update/pacienteTurno/{id}")
 	public ResponseEntity<?> actualizarTurnoPaciente(@RequestBody CambioTurno cambioTurno, @PathVariable Long id){
@@ -231,5 +249,7 @@ public class ClinicaController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
+=======
+>>>>>>> Stashed changes
 
 }
