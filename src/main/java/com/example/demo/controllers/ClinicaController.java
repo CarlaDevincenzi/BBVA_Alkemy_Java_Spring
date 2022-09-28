@@ -275,7 +275,7 @@ public class ClinicaController {
 	@PatchMapping("/update/pacienteTurno/{id}")
 	public ResponseEntity<?> actualizarTurnoPaciente(@RequestBody CambioTurno cambioTurno, @PathVariable Long id){
 		try {
-			PacienteDto p = service.updateTurnoPaciente(cambioTurno, id);
+			Paciente p = service.updateTurnoPaciente(cambioTurno, id);
 			if(p == null){
 				throw new Exception("No se pudo actualizar el paciente, verifica el id");
 			}

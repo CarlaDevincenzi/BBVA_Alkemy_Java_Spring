@@ -27,7 +27,7 @@ public interface ClinicaService {
     void eliminarClinica (Long idClinica);
     double promedioPacientesAtendidosPorMedico();
     List<Paciente> pacientesEntreFechas(Date fechaDesde, Date fechaHasta);
-    PacienteDto updateTurnoPaciente(CambioTurno cambioTurno, Long id);
+    Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id);
 
     MedicoDto addMedico(MedicoDto medicoDto);
     PacienteDto addPaciente(PacienteDto pacienteDto);

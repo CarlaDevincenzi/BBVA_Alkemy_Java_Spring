@@ -302,15 +302,16 @@ public class ClinicaServiceImpl implements ClinicaService {
 		return pacientesFecha;
 	}
 
-	public PacienteDto updateTurnoPaciente(CambioTurno cambioTurno, Long id){
+	public Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id){
 		Optional<Paciente> p = pacienteRepository.findById(id);
-		PacienteDto pacienteDto = null;
+		Paciente paciente = null;
 		if(p.isPresent()){
-			pacienteDto = pacienteConverter.converteEntityToDto(p.get());
-			pacienteDto.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
-
-			pacienteRepository.save(pacienteConverter.convertDtoToEntity(pacienteDto));
+			paciente = p.get();
+			paciente.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
+			pacienteRepository.save(paciente);
 		}
-		return pacienteDto;
+		return paciente;
 	}
+
+
 }
