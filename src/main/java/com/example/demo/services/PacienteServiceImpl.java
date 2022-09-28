@@ -117,15 +117,16 @@ public class PacienteServiceImpl implements PacienteService {
     }
 
     @Override
-    public Paciente updateTurnoPaciente(CambioTurno cambioTurno, Long id){
+    public PacienteDto updateTurnoPaciente(CambioTurno cambioTurno, Long id){
         Optional<Paciente> p = pacienteRepository.findById(id);
-        Paciente paciente = null;
+        PacienteDto pacienteDto = null;
         if(p.isPresent()){
-            paciente = p.get();
-            paciente.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
-            pacienteRepository.save(paciente);
+            pacienteDto = pacienteConverter.converteEntityToDto(p.get());
+            pacienteDto.setFechaTurnoConMedico(cambioTurno.getFechaTurno());
+
+            pacienteRepository.save(pacienteConverter.convertDtoToEntity(pacienteDto));
         }
-        return paciente;
+        return pacienteDto;
     }
 
 
